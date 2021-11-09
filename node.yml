@@ -1,0 +1,44 @@
+---
+- hosts: service
+  remote_user: docker
+  gather_facts: no
+  become: yes
+  vars:
+    user: "docker"
+    NODEJS_VERSION: "14"
+    ansible_distribution_release: "xenial" #trusty
+ 
+  tasks:
+    - name: Copy files to workers
+      become: true
+      git:
+        repo: https://git.swarmlab.io:3000/Lefteris/dummyservice.git
+        dest: /project/courses/dummy
+        force: yes
+    - name: Install the gpg key for nodejs LTS
+      apt_key:
+        url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+        state: present
+    - name: Install the nodejs LTS repos
+      apt_repository:
+        repo: "deb https://deb.nodesource.com/node_{{ NODEJS_VERSION }}.x {{ ansible_distribution_release }} main"
+        state: present
+        # update_cache: yes
+    - name: Install the nodejs
+      become: true
+      apt:
+        name: nodejs
+        state: present
+    # - name: Install npm
+    #   become: true
+    #   apt:
+    #     name: npm
+    #     state: present
+    - name: install dependencies
+      command: npm install
+      args:
+        chdir: "/project/courses/dummy/swarmlab-app/src"
+    - name: Build app
+      command: npm run start
+      args:
+        chdir: "/project/courses/dummy/swarmlab-app/src"

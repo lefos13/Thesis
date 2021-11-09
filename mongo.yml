@@ -1,0 +1,66 @@
+---
+- hosts: service
+  remote_user: docker
+  become: yes
+  gather_facts: no
+  vars:
+    user: "docker"
+ 
+  tasks:
+
+     # ------------------------
+     # apt update
+     # -------------------------
+    # - name: apt update packages
+    #   become: true
+    #   apt:
+    #     update_cache: 'yes'
+    #     force_apt_get: 'yes'
+    #     upgrade: 'dist'
+    #     cache_valid_time: 3600
+    #     install_recommends: true
+    #     autoremove: true
+
+     # ------------------------
+     # apt install packages
+     # -------------------------
+    # - name: apt install packages
+    #   become: true
+    #   apt:
+    #     update_cache: 'yes'
+    #     force_apt_get: 'yes'
+    #     install_recommends: true
+    #     autoremove: true
+    #     name: "{{ packages }}"
+    #   vars:
+    #     packages:
+    #      - build-essential
+    #      - git
+    #      - flex
+    #      - bison
+    #      - traceroute
+    #      - curl
+    #      - lynx
+    #      - ruby      
+    - name: Install gnupg
+      apt:
+        name: gnupg
+    - name: Import the public key used by the package management system
+      become: true
+      apt_key:
+        url: https://www.mongodb.org/static/pgp/server-4.4.asc
+        state: present
+    - name: Create a list file for mongodb
+      command: echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+      update_cache: yes
+    # - name: Add MongoDB repository
+    #   apt_repository: repo='deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' state=present
+    - name: install mongodb
+      apt:
+        name: mongodb
+        state: present
+    - name: run mongodb
+      become: true
+      command: service mongodb start
+      # notify:
+      # - start mongodb

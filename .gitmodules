@@ -1,0 +1,12 @@
+[submodule "WriteToMongo"]
+	path = WriteToMongo
+	url = https://git.swarmlab.io:3000/Lefteris/WriteToMongo
+[submodule "dummyservice"]
+	path = dummyservice
+	url = https://git.swarmlab.io:3000/Lefteris/dummyservice
+[submodule "playground-client"]
+	path = playground-client
+	url = https://git.swarmlab.io:3000/Lefteris/playground-client
+[submodule "readmongo"]
+	path = readmongo
+	url = https://git.swarmlab.io:3000/Lefteris/readmongo

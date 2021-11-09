@@ -1,0 +1,17 @@
+Uparxei custom css gia to vuetable poy prepei na lifthei upopsin se periptwsh pou treksei
+se allo termatiko
+
+// kill docker if container bugs
+sudo systemctl restart docker.socket docker.service
+docker rm -f <container id>
+
+//kill a process by id
+lsof -i:8080
+
+kill $(lsof -t -i:8080)
+
+kill -9 $(lsof -t -i:8080)
+
+
+fuser 3000/tcp
+fuser -k 8080/tcp
